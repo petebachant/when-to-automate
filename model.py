@@ -9,13 +9,16 @@ class Artifact(BaseModel):
 
 class Task(BaseModel):
     name: str
+    iterations: int = 1
     inputs: list[Artifact] = []
     outputs: list[Artifact] = []
     cost_fixed_hr: float = 0.0
     cost_to_automate_hr: float
     cost_to_do_manual_hr: float
     cost_to_do_auto_hr: float
-    iterations: int = 1
+    cost_to_automate_input_transfer_hr: float
+    input_transfer_cost_manual_hr: float
+    input_transfer_cost_auto_hr: float
 
 
 class Workflow(BaseModel):
@@ -35,13 +38,14 @@ artifacts: dict[str, Artifact] = {
         "result2",
         "result3",
         "result4",
+        "paper",
     ]
 }
 
 workflow = Workflow(
     tasks=[
         Task(
-            name="Collect data",
+            name="Collect raw data",
             inputs=[],
             outputs=[artifacts["raw-data"]],
             cost_fixed_hr=0,
@@ -49,16 +53,28 @@ workflow = Workflow(
             cost_to_do_manual_hr=20,
             cost_to_do_auto_hr=5,
             iterations=1,
+            input_transfer_cost_auto_hr=0,
+            input_transfer_cost_manual_hr=0,
+            cost_to_automate_input_transfer_hr=0,
         ),
         Task(
             name="Process data",
             inputs=[artifacts["raw-data"]],
-            outputs=[artifacts["processed-data"]],
+            outputs=[
+                artifacts["processed-data"],
+                artifacts["result1"],
+                artifacts["result2"],
+                artifacts["result3"],
+                artifacts["result4"],
+            ],
             cost_to_automate_hr=40,
             cost_to_do_auto_hr=1,
             cost_to_do_manual_hr=5,
             iterations=10,
-        )
+            cost_to_automate_input_transfer_hr=10,
+            input_transfer_cost_auto_hr=0,
+            input_transfer_cost_manual_hr=1,
+        ),
     ]
 )
 
