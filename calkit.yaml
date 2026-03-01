@@ -6,3 +6,7 @@ git_repo_url: https://github.com/petebachant/when-to-automate
 questions:
   - When is it worth automating the connections between stages in a research
     workflow?
+environments:
+  main:
+    kind: uv
+    path: pyproject.toml
