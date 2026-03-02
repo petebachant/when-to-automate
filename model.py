@@ -26,8 +26,24 @@ class Task(BaseModel):
 
 
 class PostIteration(BaseModel):
+    """Additional iterations of a task after the workflow has been completed
+    once.
+
+    ``do_downstream`` indicates whether downstream tasks need to be every
+    iteration to validate the results of the post-iteration task.
+    """
     task: Task
     do_downstream: bool
+    iterations: int = 1
+
+
+class PartialPostIteration(BaseModel):
+    """A post-iteration that only runs a subset of the downstream tasks.
+
+    Once iterations are complete, then downstream tasks are run.
+    """
+    task: Task
+    end_task_to_validate: Task
     iterations: int = 1
 
 
